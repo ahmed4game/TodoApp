@@ -1,7 +1,7 @@
 package com.ahmed.fms.todo
 
 import android.content.Context
-import androidx.room.Room
+import com.ahmed.fms.todo.dao.CategoryDao
 import com.ahmed.fms.todo.dao.TodoDao
 import com.ahmed.fms.todo.db.TodoDatabase
 import dagger.Module
@@ -18,15 +18,16 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun provideDatabase(@ApplicationContext context: Context): TodoDatabase {
-        return Room.databaseBuilder(
-            context,
-            TodoDatabase::class.java,
-            "todo_database"
-        ).build()
+        return TodoDatabase.getDatabase(context)
     }
 
     @Provides
     fun provideTodoDao(database: TodoDatabase): TodoDao {
         return database.todoDao()
+    }
+
+    @Provides
+    fun provideCategoryDao(database: TodoDatabase): CategoryDao {
+        return database.categoryDao()
     }
 }

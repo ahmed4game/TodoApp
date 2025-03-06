@@ -6,13 +6,11 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ahmed.fms.todo.navigation.NavGraph
 import com.ahmed.fms.todo.ui.theme.TODOTheme
+import com.ahmed.fms.todo.viewmodel.CategoryViewModel
 import com.ahmed.fms.todo.viewmodel.TodoViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -27,8 +25,9 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val viewModel: TodoViewModel = hiltViewModel()
-                    NavGraph(viewModel = viewModel )
+                    val todoViewModel: TodoViewModel = hiltViewModel()
+                    val categoryViewModel: CategoryViewModel = hiltViewModel()
+                    NavGraph(todoViewModel, categoryViewModel)
                 }
             }
         }

@@ -3,10 +3,8 @@ package com.ahmed.fms.todo.data
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "todo_table")
-data class Todo(
+@Entity("category_table")
+data class Category(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
-    val title: String,
-    val isCompleted: Boolean = false,
-    val categoryId: Int = 0
-    )
+    val name: String
+)

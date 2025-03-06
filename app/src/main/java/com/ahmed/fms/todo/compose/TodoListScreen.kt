@@ -1,6 +1,5 @@
 package com.ahmed.fms.todo.compose
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -22,6 +21,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,22 +32,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.ahmed.fms.todo.dao.TodoDao
+import androidx.navigation.NavHostController
 import com.ahmed.fms.todo.data.Todo
-import com.ahmed.fms.todo.navigation.NavGraph
-import com.ahmed.fms.todo.repos.TodoRepository
 import com.ahmed.fms.todo.ui.theme.TODOTheme
 import com.ahmed.fms.todo.viewmodel.TodoViewModel
-import kotlinx.coroutines.flow.Flow
 
 
 @Composable
-fun TodoListScreen(viewModel: TodoViewModel) {
-    val todos by viewModel.allTodos.collectAsState(initial = emptyList())
+fun TodoListScreen(viewModel: TodoViewModel, navController: NavHostController, categoryId: Int) {
+    val todos by viewModel.todos.collectAsState()
+
+    LaunchedEffect(categoryId) {
+        viewModel.setSelectedCategoryId(categoryId)
+    }
 
     Column(
         modifier = Modifier
@@ -59,7 +58,9 @@ fun TodoListScreen(viewModel: TodoViewModel) {
         OutlinedTextField(
             value = newTask,
             onValueChange = { newTask = it },
-            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 8.dp),
             label = { Text(text = "New Task") }
         )
 
@@ -106,7 +107,11 @@ fun TodoListPreview() {
         Box(modifier = Modifier
             .fillMaxWidth()
             .shadow(2.dp, shape = RoundedCornerShape(8.dp)) // Shadow with rounded corners
-            .border(1.dp, Color.DarkGray, shape = RoundedCornerShape(8.dp)) // Border with rounded corners
+            .border(
+                1.dp,
+                Color.DarkGray,
+                shape = RoundedCornerShape(8.dp)
+            ) // Border with rounded corners
             .clip(RoundedCornerShape(8.dp)) // Clip content to match shape
 //            .border(border = BorderStroke(2.dp, Color.Black))
         ) {
