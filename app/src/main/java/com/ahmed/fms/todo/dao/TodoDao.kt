@@ -15,6 +15,6 @@ interface TodoDao {
     @Delete
     suspend fun delete(todo: Todo)
 
-    @Query("SELECT * from todo_table ORDER BY id DESC")
-    fun getTodoList(): Flow<List<Todo>>
+    @Query("SELECT * from todo_table WHERE categoryId = :categoryId ORDER BY id DESC")
+    fun getTodosByCategory(categoryId: Int): Flow<List<Todo>>
 }

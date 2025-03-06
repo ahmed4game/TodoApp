@@ -9,7 +9,9 @@ import javax.inject.Singleton
 @Singleton
 class TodoRepository @Inject constructor(private val todoDao: TodoDao) {
 
-    val allTodos: Flow<List<Todo>> = todoDao.getTodoList()
+    fun getTodosByCategory(categoryId: Int): Flow<List<Todo>> {
+        return todoDao.getTodosByCategory(categoryId)
+    }
 
     suspend fun insert(todo: Todo) {
         todoDao.insert(todo)
