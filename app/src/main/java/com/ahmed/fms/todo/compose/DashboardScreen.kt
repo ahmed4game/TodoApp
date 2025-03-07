@@ -51,11 +51,11 @@ fun DashboardScreen(viewModel: CategoryViewModel, navController: NavHostControll
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Header()
-        CategoryField(navController, viewModel)
+        CategoryField(viewModel)
         Text(text = "Categories")
         LazyColumn (modifier = Modifier.fillMaxSize()) {
             items(categories) { category -> 
-                categoryItem(category = category, viewModel = viewModel)
+                categoryItem(category = category, viewModel = viewModel, navController)
             }
         }
     }
@@ -63,12 +63,15 @@ fun DashboardScreen(viewModel: CategoryViewModel, navController: NavHostControll
 
 @Composable
 private fun CategoryField(
-    navController: NavHostController,
     viewModel: CategoryViewModel
 ) {
     var newCategory by remember {
         mutableStateOf("")
     }
+    var errorMessage by remember {
+        mutableStateOf("")
+    }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -78,7 +81,10 @@ private fun CategoryField(
     ) {
         OutlinedTextField(
             value = newCategory,
-            onValueChange = { newCategory = it },
+            onValueChange = {
+                newCategory = it
+                errorMessage = ""
+            },
             shape = RoundedCornerShape(32.dp),
             modifier = Modifier.weight(1f),
             trailingIcon = {
@@ -86,17 +92,20 @@ private fun CategoryField(
                     if (newCategory.isNotBlank()) {
                         viewModel.addCategory(newCategory)
                     } else {
-
+                        errorMessage = "Category field can't be blank"
                     }
-//                    navController.navigate("todo_list")
                 }) {
                     Icon(Icons.Default.Add, contentDescription = "Add")
                 }
             },
             label = {
                 Text("Add Category")
-            }
+            },
+            isError = errorMessage.isNotBlank()
         )
+    }
+    if (errorMessage.isNotBlank()) {
+        Text(text = errorMessage, color = Color.Red, fontSize = 12.sp)
     }
 }
 
@@ -140,16 +149,16 @@ private fun Header() {
 }
 
 @Composable
-fun categoryItem(category: Category, viewModel: CategoryViewModel) {
+fun categoryItem(category: Category, viewModel: CategoryViewModel, navController: NavHostController) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .clickable { /*viewModel.toggleComplete(todo)*/ },
+            .clickable { navController.navigate("todo_list/${category.id}") },
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Text(text = category.name, modifier = Modifier.weight(1f))
-        IconButton(onClick = { /*viewModel.deleteTodo(todo)*/ }) {
+        IconButton(onClick = { viewModel.remove(category) }) {
             Icon(Icons.Default.Delete, contentDescription = "Delete")
         }
     }

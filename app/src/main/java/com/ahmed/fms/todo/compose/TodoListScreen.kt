@@ -34,14 +34,13 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import com.ahmed.fms.todo.data.Todo
 import com.ahmed.fms.todo.ui.theme.TODOTheme
 import com.ahmed.fms.todo.viewmodel.TodoViewModel
 
 
 @Composable
-fun TodoListScreen(viewModel: TodoViewModel, navController: NavHostController, categoryId: Int) {
+fun TodoListScreen(viewModel: TodoViewModel, categoryId: Int) {
     val todos by viewModel.todos.collectAsState()
 
     LaunchedEffect(categoryId) {
@@ -67,7 +66,7 @@ fun TodoListScreen(viewModel: TodoViewModel, navController: NavHostController, c
         Button(
             onClick = {
                 if (newTask.isNotBlank()) {
-                    viewModel.addTodo(newTask)
+                    viewModel.addTodo(newTask, categoryId)
                     newTask = ""
                 }
             },
@@ -90,7 +89,8 @@ fun todoItem(todo: Todo, viewModel: TodoViewModel) {
             .fillMaxWidth()
             .padding(8.dp)
             .clickable { viewModel.toggleComplete(todo) },
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Text(text = todo.title, modifier = Modifier.weight(1f))
         Checkbox(checked = todo.isCompleted, onCheckedChange = { viewModel.toggleComplete(todo) })
