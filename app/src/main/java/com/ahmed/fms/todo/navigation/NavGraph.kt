@@ -21,7 +21,7 @@ fun NavGraph(todoViewModel: TodoViewModel, categoryViewModel: CategoryViewModel)
             arguments = listOf(navArgument("categoryId") {type = NavType.IntType})
             ) {backStackEntry ->
             val categoryId = backStackEntry.arguments?.getInt("categoryId") ?: 0
-            TodoListScreen(todoViewModel, navController, categoryId)
+            TodoListScreen(todoViewModel, categoryId)
         }
         composable("dashboard") {
             DashboardScreen(categoryViewModel, navController)

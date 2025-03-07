@@ -8,8 +8,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -29,9 +27,9 @@ class TodoViewModel @Inject constructor(private val todoRepository: TodoReposito
         _selectedCategoryId.value = categoryId
     }
 
-    fun addTodo(title: String) {
+    fun addTodo(title: String, categoryId: Int) {
         viewModelScope.launch {
-            todoRepository.insert(Todo(title = title))
+            todoRepository.insert(Todo(title = title, categoryId = categoryId))
         }
     }
 
